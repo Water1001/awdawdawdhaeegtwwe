@@ -1,0 +1,482 @@
+local library = {}
+local toggled = false
+local Mouse = game.Players.LocalPlayer:GetMouse()
+function library:CreateWindow(name)
+	if game.CoreGui:FindFirstChild("LucianUI") then
+		game.CoreGui.LucianUI:Destroy()
+	end
+	local LucianUI = Instance.new("ScreenGui")
+	local TopMain = Instance.new("Frame")
+	local Container = Instance.new("Frame")
+	local UIGridLayout = Instance.new("UIGridLayout")
+	local GuiTitle = Instance.new("TextLabel")
+	local ToggleVisible = Instance.new("TextButton")
+	local UIPadding = Instance.new("UIPadding")
+
+	LucianUI.Name = "LucianUI"
+	LucianUI.Parent = game.CoreGui
+	LucianUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	LucianUI.ResetOnSpawn = false
+
+	TopMain.Name = "TopMain"
+	TopMain.Parent = LucianUI
+	TopMain.AnchorPoint = Vector2.new(0.00100000005, 0)
+	TopMain.BackgroundColor3 = Color3.fromRGB(15,15,15)
+	TopMain.BorderSizePixel = 0
+	TopMain.Position = UDim2.new(0.236822397, 0, 0.244750544, 0)
+	TopMain.Size = UDim2.new(0, 589, 0, 39)
+
+	Container.Name = "Container"
+	Container.Parent = TopMain
+	Container.AnchorPoint = Vector2.new(0.00100000005, 0)
+	Container.BackgroundColor3 = Color3.fromRGB(12,12,12)
+	Container.BorderSizePixel = 0
+	Container.ClipsDescendants = true
+	Container.Position = UDim2.new(0.0010202073, 0, 0.980991602, 0)
+	Container.Size = UDim2.new(0, 589, 0, 291)
+
+	UIGridLayout.Parent = Container
+	UIGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIGridLayout.CellPadding = UDim2.new(0, 10, 0, 5)
+	UIGridLayout.CellSize = UDim2.new(0, 150, 0, 30)
+
+	UIPadding.Parent = Container
+	UIPadding.PaddingLeft = UDim.new(0, 13)
+	UIPadding.PaddingTop = UDim.new(0, 7)
+	UIPadding.PaddingRight = UDim.new(0, 7)
+	UIPadding.PaddingBottom = UDim.new(0, 7)
+
+	GuiTitle.Name = "GuiTitle"
+	GuiTitle.Parent = TopMain
+	GuiTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	GuiTitle.BackgroundTransparency = 1.000
+	GuiTitle.BorderSizePixel = 0
+	GuiTitle.Position = UDim2.new(0.331069618, 0, 0, 0)
+	GuiTitle.Size = UDim2.new(0, 200, 0, 38)
+	GuiTitle.Font = Enum.Font.SourceSans
+	GuiTitle.Text = name
+	GuiTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+	GuiTitle.TextSize = 25.000
+
+	ToggleVisible.Name = "ToggleVisible"
+	ToggleVisible.Parent = TopMain
+	ToggleVisible.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ToggleVisible.BackgroundTransparency = 1.000
+	ToggleVisible.BorderSizePixel = 0
+	ToggleVisible.Position = UDim2.new(0.940577209, 0, 0, 0)
+	ToggleVisible.Rotation = 90.000
+	ToggleVisible.Size = UDim2.new(0, 35, 0, 35)
+	ToggleVisible.Font = Enum.Font.SourceSans
+	ToggleVisible.Text = ">"
+	ToggleVisible.TextColor3 = Color3.fromRGB(255, 255, 255)
+	ToggleVisible.TextScaled = true
+	ToggleVisible.TextSize = 14.000
+	ToggleVisible.TextWrapped = true
+	ToggleVisible.MouseButton1Click:Connect(function()
+		if toggled then
+			toggled = false
+			Container:TweenSize(UDim2.new(0, 589,0, 0),"In","Quad", 0.2)
+			game:GetService("TweenService"):Create(ToggleVisible, TweenInfo.new(0.3), {Rotation = 270}):Play()
+		else
+			toggled = true
+			Container:TweenSize(UDim2.new(0, 589,0, 291),"Out","Quad",0.2)
+			game:GetService("TweenService"):Create(ToggleVisible, TweenInfo.new(0.3), {Rotation = 90}):Play()
+		end	
+	end)
+
+	local GuiLibrary = {}
+
+local UIS = game:GetService("UserInputService")
+function Drag(Frame)
+    dragToggle = nil
+    local dragSpeed = 0
+    dragInput = nil
+    dragStart = nil
+    local dragPos = nil
+    function updateInput(input)
+        local Delta = input.Position - dragStart
+        local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+        game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.25), {Position = Position}):Play()
+    end
+    Frame.InputBegan:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and UIS:GetFocusedTextBox() == nil then
+            dragToggle = true
+            dragStart = input.Position
+            startPos = Frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragToggle = false
+                end
+            end)
+        end
+    end)
+    Frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragToggle then
+            updateInput(input)
+        end
+    end)
+end -- end of drag function
+
+Drag(TopMain)
+
+	local function Ripple(Object)
+		local Sample = Instance.new("ImageLabel")
+
+		Sample.Name = "Sample"
+		Sample.Parent = script
+		Sample.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Sample.BackgroundTransparency = 1.000
+		Sample.Image = "http://www.roblox.com/asset/?id=4560909609"
+		Sample.ImageColor3 = Color3.fromRGB(255,255,255)
+		Sample.ImageTransparency = 0.600
+
+		local Mouse = game.Players.LocalPlayer:GetMouse()
+		local sample = script:WaitForChild('Sample')
+
+		local btn = Object
+			local c = sample:Clone()
+			c.Parent = btn
+			local x, y = (Mouse.X - c.AbsolutePosition.X), (Mouse.Y - c.AbsolutePosition.Y)
+			c.Position = UDim2.new(0, x, 0, y)
+			local len, size = 0.35, nil
+			if btn.AbsoluteSize.X >= btn.AbsoluteSize.Y then
+				size = (btn.AbsoluteSize.X * 1.5)
+			else
+				size = (btn.AbsoluteSize.Y * 1.5)
+			end
+			c:TweenSizeAndPosition(UDim2.new(0, size, 0, size), UDim2.new(0.5, (-size / 2), 0.5, (-size / 2)), 'Out', 'Quad', len, true, nil)
+			for i = 1, 10 do
+				c.ImageTransparency = c.ImageTransparency + 0.05
+				wait(len / 12)
+			end
+			c:Destroy()
+	end
+	
+	function GuiLibrary:CreateButton(text,fontsize,callback)	
+		local callback = callback or function() end
+		local fontsize = fontsize or 27
+		local text = text or "New Button"
+		local TextButton = Instance.new("TextButton")	
+		TextButton.Parent = Container
+		TextButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+		TextButton.BorderSizePixel = 0
+		TextButton.Position = UDim2.new(0.0492359921, 0, 0.0859106556, 0)
+		TextButton.Size = UDim2.new(0, 121, 0, 25)
+		TextButton.Font = Enum.Font.SourceSans
+		TextButton.TextColor3 = Color3.fromRGB(255,255,255)
+		TextButton.TextSize = fontsize
+		TextButton.Text = text
+		TextButton.ClipsDescendants = true
+		TextButton.AutoButtonColor = false
+		
+		TextButton.MouseEnter:Connect(function()
+			game:GetService("TweenService"):Create(TextButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(25,25,25)}):Play()
+		end)
+		
+		TextButton.MouseLeave:Connect(function()
+			game:GetService("TweenService"):Create(TextButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(30,30,30)}):Play()
+		end)
+
+		TextButton.MouseButton1Click:Connect(function()
+			Ripple(TextButton)
+			pcall(callback)
+		end)
+	end
+	function GuiLibrary:CreateToggle(text,fontsize,callback)
+		local actions = {}
+		local enabled = false
+		local text = text or "New Toggle"
+		local callback = callback or function() end
+		local fontsize = fontsize or 27
+
+		local CheckToggle = Instance.new("TextLabel")
+		local ToggleStatus = Instance.new("TextButton")
+
+		CheckToggle.Name = "CheckToggle"
+		CheckToggle.Parent = Container
+		CheckToggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		CheckToggle.BackgroundTransparency = 1.000
+		CheckToggle.BorderSizePixel = 0
+		CheckToggle.Position = UDim2.new(0.0135823432, 0, -0.00343642617, 0)
+		CheckToggle.Size = UDim2.new(0, 200, 0, 50)
+		CheckToggle.Font = Enum.Font.SourceSans
+		CheckToggle.Text = text
+		CheckToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+		CheckToggle.TextSize = fontsize
+		CheckToggle.TextWrapped = true
+		CheckToggle.TextXAlignment = Enum.TextXAlignment.Left
+		CheckToggle.ClipsDescendants = true
+
+		ToggleStatus.Name = "ToggleStatus"
+		ToggleStatus.Parent = CheckToggle
+		ToggleStatus.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+		ToggleStatus.BorderSizePixel = 0
+		ToggleStatus.Position = UDim2.new(0.5, 0, 0.100000001, 0)
+		ToggleStatus.Size = UDim2.new(0, 28, 0, 27)
+		ToggleStatus.Font = Enum.Font.SourceSans
+		ToggleStatus.Text = ""
+		ToggleStatus.TextColor3 = Color3.fromRGB(255,255,255)
+		ToggleStatus.TextSize = 14.000
+		ToggleStatus.ClipsDescendants = true
+		ToggleStatus.AutoButtonColor = false
+
+		local function Fire()
+			enabled = not enabled
+			ToggleStatus.Text = enabled and utf8.char(10003) or ""
+			Ripple(ToggleStatus)
+			pcall(callback, enabled)
+		end
+		ToggleStatus.MouseButton1Click:Connect(Fire)
+	end
+	function GuiLibrary:CreateLabel(text,font,size)
+		local text = text or "New Label"
+		local size = size or 27
+		local font = font or Enum.Font.SourceSans
+		local Label = Instance.new("TextLabel")
+
+		Label.Name = "Label"
+		Label.Parent = Container
+		Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Label.BackgroundTransparency = 1.000
+		Label.BorderSizePixel = 0
+		Label.Position = UDim2.new(0.410554558, 0, 0.470031559, 0)
+		Label.Size = UDim2.new(0, 200, 0, 50)
+		Label.Font = font
+		Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Label.TextSize = size
+		Label.Text = text
+	end
+	
+	function GuiLibrary:CreateDestroyButton(text,fontsize)
+		local text = text or "Destroy Gui"
+		local fontsize = fontsize or 27
+		local TextButton = Instance.new("TextButton")	
+		TextButton.Parent = Container
+		TextButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+		TextButton.BorderSizePixel = 0
+		TextButton.Position = UDim2.new(0.0492359921, 0, 0.0859106556, 0)
+		TextButton.Size = UDim2.new(0, 121, 0, 25)
+		TextButton.Font = Enum.Font.SourceSans
+		TextButton.TextColor3 = Color3.fromRGB(255,255,255)
+		TextButton.TextSize = fontsize
+		TextButton.Text = text
+		TextButton.ClipsDescendants = true
+		TextButton.AutoButtonColor = false
+		
+		TextButton.MouseButton1Click:Connect(function()
+			LucianUI:Destroy()
+			if game.CoreGui:FindFirstChild("LucianUiNotification") then
+				game.CoreGui.LucianUiNotification:Destroy()
+			end
+		end)
+		
+		TextButton.MouseEnter:Connect(function()
+			game:GetService("TweenService"):Create(TextButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(25,25,25)}):Play()
+		end)
+
+		TextButton.MouseLeave:Connect(function()
+			game:GetService("TweenService"):Create(TextButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(30,30,30)}):Play()
+		end)
+	end
+	
+	function GuiLibrary:CreateRadioButton(text, callback)
+		local text = text or "New Radio Button"
+		local callback = callback or function() end
+		local RadioButtonLabel = Instance.new("Frame")
+		local Label = Instance.new("TextLabel")
+		local RadioContainer = Instance.new("Frame")
+		local Outline = Instance.new("ImageLabel")
+		local RadioButton = Instance.new("ImageButton")
+		local Circle = Instance.new("ImageLabel")
+		local radiobuttontoggle = false
+
+		RadioButtonLabel.Name = "RadioButtonLabel"
+		RadioButtonLabel.Parent = Container
+		RadioButtonLabel.BackgroundColor3 = Color3.fromRGB(29, 29, 30)
+		RadioButtonLabel.BackgroundTransparency = 1.000
+		RadioButtonLabel.BorderColor3 = Color3.fromRGB(33, 95, 222)
+		RadioButtonLabel.BorderSizePixel = 0
+		RadioButtonLabel.Position = UDim2.new(0, 250, 0, 60)
+		RadioButtonLabel.Size = UDim2.new(0, 350, 0, 24)
+
+		Label.Name = "Label"
+		Label.Parent = RadioButtonLabel
+		Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Label.BackgroundTransparency = 1.000
+		Label.ClipsDescendants = true
+		Label.LayoutOrder = 1
+		Label.Position = UDim2.new(0.25, 1, 0, 0)
+		Label.Size = UDim2.new(1, -10, 1, 0)
+		Label.Font = Enum.Font.Gotham
+		Label.Text = text
+		Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Label.TextSize = 14.000
+		Label.TextXAlignment = Enum.TextXAlignment.Left
+
+		RadioContainer.Name = "RadioContainer"
+		RadioContainer.Parent = RadioButtonLabel
+		RadioContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		RadioContainer.BackgroundTransparency = 1.000
+		RadioContainer.BorderColor3 = Color3.fromRGB(33, 95, 222)
+		RadioContainer.Size = UDim2.new(0.0799999982, 0, 1, 0)
+
+		Outline.Name = "Outline"
+		Outline.Parent = RadioContainer
+		Outline.AnchorPoint = Vector2.new(1, 1)
+		Outline.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Outline.BackgroundTransparency = 1.000
+		Outline.BorderColor3 = Color3.fromRGB(255, 255, 255)
+		Outline.Position = UDim2.new(1, 0, 1, 0)
+		Outline.Size = UDim2.new(1, 0, 1, 0)
+		Outline.ZIndex = 0
+		Outline.Image = "rbxassetid://4504304159"
+
+		RadioButton.Name = "RadioButton"
+		RadioButton.Parent = RadioContainer
+		RadioButton.AnchorPoint = Vector2.new(0.5, 0.5)
+		RadioButton.BackgroundColor3 = Color3.fromRGB(47, 47, 48)
+		RadioButton.BackgroundTransparency = 1.000
+		RadioButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
+		RadioButton.BorderSizePixel = 0
+		RadioButton.Position = UDim2.new(0.6, 0, 0.5, 0)
+		RadioButton.Selectable = false
+		RadioButton.Size = UDim2.new(2, 9.2, 1, 4.2)
+		RadioButton.AutoButtonColor = false
+		RadioButton.Image = "rbxassetid://4504304159"
+		RadioButton.ImageColor3 = Color3.fromRGB(47, 47, 48)
+		RadioButton.ClipsDescendants = true
+
+		Circle.Name = "Circle"
+		Circle.Parent = RadioButton
+		Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+		Circle.BackgroundColor3 = Color3.fromRGB(33, 95, 222)
+		Circle.BackgroundTransparency = 1.000
+		Circle.BorderSizePixel = 0
+		Circle.Position = UDim2.new(0.5, 0, 0.5, 0)
+		Circle.Size = UDim2.new(1, 1, 0.9, 3)
+		Circle.Image = "rbxassetid://4504304159"
+		Circle.ImageColor3 = Color3.fromRGB(33, 95, 222)
+		Circle.Visible = false
+		Circle.ClipsDescendants = true
+		
+		RadioButton.MouseButton1Click:Connect(function()
+			if radiobuttontoggle == false then
+				Circle.Visible = true
+				radiobuttontoggle = true
+				Ripple(Circle)
+				pcall(callback, radiobuttontoggle)
+			else
+				Circle.Visible = false
+				radiobuttontoggle = false
+				Ripple(Circle)
+				pcall(callback, radiobuttontoggle)
+			end
+		end)
+	end
+	function GuiLibrary:CreateSlider(text,max,callback)
+		local text = text or "New Slider"
+		local max = max or 100
+		local callback = callback or function() end
+		local Slider = Instance.new("Frame")
+		local Background = Instance.new("Frame")
+		local Bar = Instance.new("Frame")
+		local SliderValue = Instance.new("TextLabel")
+		local Title = Instance.new("TextLabel")
+		local Dragger = Instance.new("ImageButton")
+
+		Slider.Name = "Slider"
+		Slider.Parent = Container
+		Slider.BackgroundColor3 = Color3.fromRGB(29, 29, 30)
+		Slider.BackgroundTransparency = 1.000
+		Slider.BorderSizePixel = 0
+		Slider.Position = UDim2.new(0, 500, 0, 200)
+		Slider.Size = UDim2.new(0, 300, 0, 20)
+
+		Background.Name = "Background"
+		Background.Parent = Slider
+		Background.AnchorPoint = Vector2.new(0.5, 0.5)
+		Background.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Background.BackgroundTransparency = 1.000
+		Background.Position = UDim2.new(0.5, 0, 0.3, 0)
+		Background.Size = UDim2.new(1, 0, 1, 0)
+
+		Bar.Name = "Bar"
+		Bar.Parent = Background
+		Bar.AnchorPoint = Vector2.new(0.5, 0.5)
+		Bar.BackgroundColor3 = Color3.fromRGB(17, 154, 222)
+		Bar.BorderSizePixel = 0
+		Bar.LayoutOrder = 1
+		Bar.Position = UDim2.new(0.5, 0, 0.9, 0)
+		Bar.Size = UDim2.new(1, 0, 0.125, 0)
+
+		SliderValue.Name = "SliderValue"
+		SliderValue.Parent = Background
+		SliderValue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		SliderValue.BackgroundTransparency = 1.000
+		SliderValue.BorderColor3 = Color3.fromRGB(27, 42, 53)
+		SliderValue.BorderSizePixel = 0
+		SliderValue.Position = UDim2.new(-0.203333333, 0, -0.5, 0)
+		SliderValue.Size = UDim2.new(0, 59, 0, 48)
+		SliderValue.Font = Enum.Font.SourceSans
+		SliderValue.Text = "0"
+		SliderValue.TextColor3 = Color3.fromRGB(255, 255, 255)
+		SliderValue.TextSize = 23.000
+
+		Title.Name = "Title"
+		Title.Parent = Background
+		Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Title.BackgroundTransparency = 1.000
+		Title.BorderColor3 = Color3.fromRGB(27, 42, 53)
+		Title.BorderSizePixel = 0
+		Title.Position = UDim2.new(0.1, -15, 0, -11)
+		Title.Size = UDim2.new(0, 173, 0, 40)
+		Title.Font = Enum.Font.SourceSans
+		Title.Text = text
+		Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+		Title.TextSize = 21
+
+		Dragger.Name = "Dragger"
+		Dragger.Parent = Slider
+		Dragger.AnchorPoint = Vector2.new(0.5, 0.5)
+		Dragger.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		Dragger.BackgroundTransparency = 1.000
+		Dragger.Position = UDim2.new(0, 0, 0.7, 0)
+		Dragger.Size = UDim2.new(0.5, 0, 0.5, 0)
+		Dragger.SizeConstraint = Enum.SizeConstraint.RelativeYY
+		Dragger.ZIndex = 4
+		Dragger.Image = "rbxassetid://4504304159"
+		Dragger.ImageColor3 = Color3.fromRGB(33, 95, 222)
+
+		local UserInputService = game:GetService("UserInputService")
+		local Dragging = false
+		Dragger.MouseButton1Down:Connect(function()
+			Dragging = true
+		end)
+
+		UserInputService.InputChanged:Connect(function()
+			if Dragging then
+				local MousePos = UserInputService:GetMouseLocation()+Vector2.new(0,36)
+				local RelPos = MousePos-Bar.AbsolutePosition
+				local Precent = math.clamp(RelPos.X/Bar.AbsoluteSize.X,0,1)
+				Dragger:TweenPosition(UDim2.new(Precent,0,0.7,0),"InOut","Quad",0.01)
+				local Real = Precent * max
+				local Final = math.floor(Real)
+				SliderValue.Text = Final
+				pcall(callback, Final)
+			end
+		end)
+
+		UserInputService.InputEnded:Connect(function(input)
+			if input.UserInputType == Enum.UserInputType.MouseButton1 then
+				Dragging = false
+			end
+		end)
+	end
+	return GuiLibrary
+end
+return library
